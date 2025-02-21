@@ -14,6 +14,12 @@ _log () {
     echo "$(date +"%Y-%m-%d %H:%M:%S") - $SCRIPT_NAME - $1" >> $LOG_FILE
 }
 
+_debug () {
+    if [ "$DEBUG" == "true" ]; then
+        _log "DEBUG: $1"
+    fi
+}
+
 _load_config () {
     # Load environment variables from .env file confirm it exists and how many variables
     if [ -f "$SCRIPT_DIR/.env" ]; then
@@ -21,7 +27,7 @@ _load_config () {
         set -a
         source "$SCRIPT_DIR/.env"
         set +a
-        _log "Environment variables loaded"
+        _debug "Environment variables loaded from ${SCRIPT_DIR}/.env file - SERVICES: ${SERVICES[@]}"
     else
         echo "Error: .env file not found"
         exit 1
@@ -43,7 +49,7 @@ _send_gotify_alert () {
 
     _log "Gotify alert: $1 - $2 - $3"
     _log "Sending alert to Gotify - ${GOTIFY_URL}/message?token=${GOTIFY_TOKEN} -F title=$TITLE -F message=$MESSAGE -F priority=$PRIORITY"
-    curl -X POST "${GOTIFY_URL}/message?token=${GOTIFY_TOKEN}" -F "title=$TITLE" -F "message=$MESSAGE" -F "priority=$PRIORITY"
+    curl -X POST "${GOTIFY_URL}/message?token=${GOTIFY_TOKEN}" -F "title=$TITLE" -F "message=$MESSAGE" -F "priority=$PRIORITY" -s -o /dev/null -w "%{http_code}" | grep -q "200" && return 0 || return $?
     return $?
 }
 
@@ -79,24 +85,34 @@ else
     return 0
 fi
 
+# Check if alert_type is passed via $1
+if [ -n "$1" ]; then
+    _log "Alert type passed via argument - $1"
+    EVENT=$1
+else
+    _log "Alert type not passed via argument - Using MONIT_EVENT: $MONIT_EVENT"
+    EVENT=$MONIT_EVENT
+fi
+
 # Monit environment variables
-MONIT_EVENT=$MONIT_EVENT
+_debug "Monit environment variables - MONIT_EVENT: $EVENT, MONIT_SERVICE: $MONIT_SERVICE, MONIT_DESCRIPTION: $MONIT_DESCRIPTION, MONIT_DATE: $MONIT_DATE, MONIT_HOST: $MONIT_HOST"
 MONIT_SERVICE=$MONIT_SERVICE
 MONIT_DESCRIPTION=$MONIT_DESCRIPTION
 MONIT_DATE=$MONIT_DATE
 MONIT_HOST=$MONIT_HOST  # Capturing hostname
 
-TITLE="$MONIT_HOST - $MONIT_SERVICE - $MONIT_EVENT"
+TITLE="$MONIT_HOST - $MONIT_SERVICE - $$EVENT"
 MESSAGE="$MONIT_DESCRIPTION - $MONIT_DATE - $MONIT_HOST"
 
-SERVICES="$1"
-SERVICES_ARRAY=()
+# Check if $SERVICES=() is not empty
+if [ -z "$SERVICES" ]; then
+    _log "No services to alert - SERVICES: ${SERVICES[@]} - Exiting"
+    exit 0
+else
+    _log "Services to alert: ${SERVICES[@]}"
+fi
 
-# Break up the services
-IFS='|' read -r -a SERVICES_ARRAY <<< "$SERVICES"
-
-for SERVICE in "${SERVICES_ARRAY[@]}"
-do
+for SERVICE in "${SERVICES[@]}"; do
     case $SERVICE in
         gotify)
             _log "Sending alert to Gotify"
@@ -111,8 +127,8 @@ do
             _send_email_alert "$MESSAGE" "$SERVICE_NAME" "$EVENT"
             ;;
         *)
-            _log "Unknown service: $SERVICE"
+            _log "Unknown service: $SERVICE or not enabled"
             ;;
     esac
 done
-        
+_log "Monit alert completed"

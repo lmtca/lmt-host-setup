@@ -1,0 +1,7 @@
+check system $HOST
+    if loadavg (1min) > 2 then exec "/root/monit-setup/monit-alert.sh loadavg_high"
+    if loadavg (5min) > 1.5 then exec "/root/monit-setup/monit-alert.sh loadavg_warning"
+    if memory usage > 80% then exec "/root/monit-setup/monit-alert.sh memory_high"
+    if cpu usage (user) > 70% for 2 cycles then exec "/root/monit-setup/monit-alert.sh cpu_user_high"
+    if cpu usage (system) > 50% for 2 cycles then exec "/root/monit-setup/monit-alert.sh cpu_system_high"
+    if cpu usage (wait) > 30% for 2 cycles then exec "/root/monit-setup/monit-alert.sh cpu_wait_high"

@@ -1,0 +1,3 @@
+check file testfile with path /root/test-monit
+    if exists then exec "/root/monit-setup/monit-alert.sh"
+    alert    
