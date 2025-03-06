@@ -1,2 +1,3 @@
 .env
 monit-alert.log
+csf-webhook/csf-webhook.log
