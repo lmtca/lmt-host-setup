@@ -1,3 +1,4 @@
 .env
 monit-alert.log
 csf-webhook/csf-webhook.log
+csf-webhook/csf-webhook.conf
