@@ -154,14 +154,18 @@ _log "==================================================================="
 _log "Started at $DATE_START"
 # Read the email from standard input (where Postfix will pipe it)
 
-_log "Sending data to $WEBHOOK_URL"
-_log "---------------------------------------------------"
-_log "Sender: $CSF_SENDER"
-_log "---------------------------------------------------"
-_log "Subject: $CSF_SUBJECT"
-_log "---------------------------------------------------"
-_log "Body: $CSF_CONTENT"
-_log "---------------------------------------------------"
+if [[ $DEBUG == "1" ]]; then
+    _log "---------------------------------------------------"
+    _log "Sender: $CSF_SENDER"
+    _log "---------------------------------------------------"
+    _log "Subject: $CSF_SUBJECT"
+    _log "---------------------------------------------------"
+    _log "Body: $CSF_CONTENT"
+    _log "---------------------------------------------------"
+else
+    _log "Email received from $CSF_SENDER"
+    _log "Subject: $CSF_SUBJECT"
+fi
 
 # Prepare the data for the webhook (e.g., as JSON)
 PAYLOAD=$(jq -n \
