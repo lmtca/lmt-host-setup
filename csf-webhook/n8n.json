@@ -1,0 +1,94 @@
+{
+    "name": "CSF Alert Ingest",
+    "nodes": [
+      {
+        "parameters": {
+          "fromEmail": "alerts@domain.ca",
+          "toEmail": "alerts@domain.ca",
+          "subject": "={{ $json.body.subject }}",
+          "emailFormat": "text",
+          "text": "={{ $json.body.body }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.emailSend",
+        "typeVersion": 2.1,
+        "position": [
+          980,
+          100
+        ],
+        "id": "0de8044e-fac8-4efc-b84e-a5d3444b9177",
+        "name": "Send Email",
+        "webhookId": "670f677d-35fc-447a-bacd-ae772674c863",
+        "credentials": {
+          "smtp": {
+            "id": "a72626FzZq0vh5dF",
+            "name": "SMTP account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "15c0fc04-4023-4fdf-97f7-66dae1ba865c",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          780,
+          100
+        ],
+        "id": "bb333389-192f-4bc6-ae3b-d3fb4abbae8b",
+        "name": "Webhook",
+        "webhookId": "15c0fc04-4023-4fdf-97f7-66dae1ba865c"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://hooks.slack.com/services",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"text\": \"{{ $json.body.subject }}\",\n  \"channel\": \"#monitoring\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          980,
+          280
+        ],
+        "id": "29dc3c43-c799-4d38-8a38-a7ec3011377a",
+        "name": "HTTP Request"
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Send Email",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": true,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "39e1029a-268f-4096-a7c8-668489c54db4",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "363cebc08bafa47d6606942fd7d72f480a5bfca71dcb6dad0c5ad4b89177c5b3"
+    },
+    "id": "Dy6mcUJuVokiFct7",
+    "tags": []
+  }

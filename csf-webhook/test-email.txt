@@ -1,0 +1,21 @@
+From root@server2.domain.ca  Fri Mar  7 00:11:36 2025
+Return-Path: <root@server2.domain.ca>
+X-Original-To: csf
+Delivered-To: csf@server2.domain.ca
+Received: by server2.domain.ca (Postfix, from userid 0)
+        id 4DDC2880E534; Fri,  7 Mar 2025 00:11:34 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 server2.domain.ca 4DDC2880E534
+From: root@server2.domain.ca
+To: csf@server2.domain.ca
+Subject: lfd on server2.domain.ca: Excessive resource usage: drfre7399 (930449 (Parent PID:930449))
+Message-Id: <20250307001135.4DDC2880E534@server2.domain.ca>
+Date: Fri,  7 Mar 2025 00:11:34 +0000 (UTC)
+
+Time:         Fri Mar  7 00:11:34 2025 +0000
+Account:      drfre7399
+Resource:     Process Time
+Exceeded:     9502099 > 3600 (seconds)
+Executable:   /home/drfrench.yourdevsite.digital/public_html/wp-content/plugins/wp-file-manager/inc/images/sh404sef.inc
+Command Line: /home/drfrench.yourdevsite.digital/public_html/wp-content/plugins/wp-file-manager/inc/images/sh404sef.inc
+PID:          930449 (Parent PID:930449)
+Killed:       No
