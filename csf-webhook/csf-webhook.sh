@@ -9,6 +9,7 @@ LOG_FILE_SIZE=50MB # 10MB
 LOG_ROTATE=5
 LOG_FILE="$SCRIPT_DIR/csf-webhook.log"
 DEBUG="0"
+CSF_INCLUDE_HEADERS="0"
 
 # -- Source the configuration file
 if [ -f "$SCRIPT_DIR/csf-webhook.conf" ]; then
@@ -141,6 +142,11 @@ elif [ "$MODE" == "test-data" ]; then
 else
     CSF_CONTENT=$(cat)
     process_email "$CSF_CONTENT"
+fi
+
+# -- Process Body
+if [ "$CSF_INCLUDE_HEADERS" == "0" ]; then
+    CSF_CONTENT=$(echo "$CSF_CONTENT" | sed -n '/^$/,$p')
 fi
 
 _log "==================================================================="
