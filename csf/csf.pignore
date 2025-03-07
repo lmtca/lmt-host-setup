@@ -1,0 +1,5 @@
+# Litespeed
+exe:/usr/local/lsws/bin/openlitespeed
+exe:/usr/local/CyberCP/bin/lswsgi
+exe:/usr/local/lscp/bin/lscpd
+exe:/usr/local/lsws/lsphp72/bin/lsphp
