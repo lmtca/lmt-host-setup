@@ -4,3 +4,4 @@ LOG_FILE="$SCRIPT_DIR/csf-webhook.log"
 DEBUG=0
 WEBHOOK_URL="https://hook.com/hook"
 CSF_INCLUDE_HEADERS=0
+DISABLE_WEBHOOK="0"

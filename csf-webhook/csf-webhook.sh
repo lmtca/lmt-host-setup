@@ -5,11 +5,12 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DATE_START="$(date)"
 
 # -- Configuration
-LOG_FILE_SIZE=50MB # 10MB
-LOG_ROTATE=5
-LOG_FILE="$SCRIPT_DIR/csf-webhook.log"
-DEBUG="0"
-CSF_INCLUDE_HEADERS="0"
+LOG_FILE_SIZE=50MB # Log file size for rotation
+LOG_ROTATE=5 # Number of rotated logs to keep
+LOG_FILE="$SCRIPT_DIR/csf-webhook.log" # Log file path
+DEBUG="0" # Debug mode
+CSF_INCLUDE_HEADERS="0" # Include email headers in the webhook payload
+DISABLE_WEBHOOK="0" # Disable webhook
 
 # -- Source the configuration file
 if [ -f "$SCRIPT_DIR/csf-webhook.conf" ]; then
@@ -172,10 +173,14 @@ PAYLOAD=$(jq -n \
 _log "Payload: $PAYLOAD"
 
 # Send the data to your webhook
-CURL_OUTPUT=$(curl -s -X POST \
+if [[ $DISABLE_WEBHOOK == "1" ]]; then
+    _log "Webhook is disabled"
+else
+    CURL_OUTPUT=$(curl -s -X POST \
      -H "Content-Type: application/json" \
      -d "$PAYLOAD" \
      "$WEBHOOK_URL")
+fi
 
 _log "$CURL_OUTPUT"
 DATE_END="$(date)"
