@@ -1,0 +1,5 @@
+{
+  "title": "$INCIDENT_ID - $NAME - $STATUS",
+  "message": "Incident #$INCIDENT_ID: $NAME ($STATUS) | Cause: $CAUSE | URL: $URL | Started: $STARTED_AT | Resolved: $RESOLVED_AT | View: $INCIDENT_URL",
+  "priority": 5
+}
