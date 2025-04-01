@@ -10,7 +10,6 @@ This script will configure monit for specific types of server deployments.
 * smartmontools
 * mdadm
 
-<<<<<<< HEAD
 ## slack
 * Sent test slack alert via shell script
 
@@ -20,10 +19,8 @@ Sending alerts to gotify server
 ```
 curl -X POST "http://gotify.domain.com/message?token=token" -F "title=Test" -F "message=Test"
 ```
-=======
 # Todo
 ## Monit
 * Add cpu/mem/filesystem monitoring
 * Add check for duplicacy for gridpane fossils taking more than 25%
 * Add check for /run as per https://community.gridpane.com/t/monit-alerts-for-run/4684
->>>>>>> 5755721 (Updated README.md)
